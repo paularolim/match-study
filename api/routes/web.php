@@ -18,6 +18,10 @@ $router->get('/', function () use ($router) {
 });
 
 $router->group(['prefix' => 'api'], function () use ($router) {
-    $router->get('/register', 'UserController@index');
+    $router->post('/login', 'UserController@login');
     $router->post('/register', 'UserController@store');
+
+    $router->group(['middleware' => 'authenticator'], function () use ($router) {
+        $router->get('/teste', 'UserController@index');
+    });
 });
