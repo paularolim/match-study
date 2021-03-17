@@ -15,7 +15,7 @@ const App = () => {
       <Tab.Navigator
         initialRouteName="Home"
         screenOptions={({route}) => ({
-          tabBarIcon: ({focused, color, size}) => {
+          tabBarIcon: ({focused, color}) => {
             let iconName;
 
             if (route.name === 'Home') {
@@ -27,7 +27,7 @@ const App = () => {
             }
 
             // You can return any component that you like here!
-            return <Icon name={iconName} size={size} color={color} />;
+            return <Icon name={iconName} size={42} color={color} />;
           },
         })}
         tabBarOptions={{
@@ -39,7 +39,14 @@ const App = () => {
           showLabel: false,
         }}>
         <Tab.Screen name="Home" component={Home} />
-        <Tab.Screen name="Chat" component={Chat} />
+        <Tab.Screen
+          name="Chat"
+          component={Chat}
+          options={{
+            tabBarBadge: 3,
+            tabBarBadgeStyle: {backgroundColor: '#E84D33', marginTop: 5},
+          }}
+        />
         <Tab.Screen name="Profile" component={Profile} />
       </Tab.Navigator>
     </NavigationContainer>
