@@ -1,11 +1,11 @@
 import React from 'react';
-import {View, ScrollView, Image, Text, TouchableHighlight} from 'react-native';
+import {StatusBar, Image, Text, TouchableHighlight, View} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-
-import home from '../assets/style/Header.js';
+import home from '../assets/style/HomeStyler.js';
 
 const Home = () => (
   <View style={home.home}>
+    <StatusBar backgroundColor="#7E549F" />
     <View style={home.header}>
       <Image
         source={require('../assets/img/LOGO.png')}
