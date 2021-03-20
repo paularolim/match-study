@@ -5,6 +5,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import Login from './screens/Login';
 import Register from './screens/Register';
+import Nav from './screens/Nav';
 
 import LogoTitle from './components/LogoTitle';
 
@@ -30,6 +31,11 @@ const App = () => (
       <Stack.Screen
         name="Register"
         component={Register}
+        options={{ headerTitle: () => <LogoTitle /> }}
+      />
+      <Stack.Screen
+        name="Nav"
+        component={Nav}
         options={{ headerTitle: () => <LogoTitle /> }}
       />
     </Stack.Navigator>

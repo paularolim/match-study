@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import {
-  StyleSheet,
   View,
   StatusBar,
   Text,
@@ -8,15 +7,15 @@ import {
   TouchableHighlight,
 } from 'react-native';
 
-import Register from './Register';
-
 import style from '../assets/style/LoginRegisterStyler';
 
 const Login = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const login = () => {};
+  const login = () => {
+    navigation.replace('Nav');
+  };
 
   return (
     <View style={style.body}>

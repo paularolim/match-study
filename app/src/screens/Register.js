@@ -67,7 +67,7 @@ const Register = ({ navigation }) => {
         />
 
         <TouchableHighlight style={style.button} onPress={register}>
-          <Text style={style.buttonText}>Entrar</Text>
+          <Text style={style.buttonText}>Cadastrar</Text>
         </TouchableHighlight>
 
         <View style={style.actions}>

@@ -1,30 +1,18 @@
-import {StyleSheet, Dimensions, PixelRatio} from 'react-native';
+import { StyleSheet, Dimensions, PixelRatio } from 'react-native';
 
-const {width, height} = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 const scale = width / 360;
 
-const normalize = size => {
+const normalize = (size) => {
   const newSize = size * scale;
   return Math.round(PixelRatio.roundToNearestPixel(newSize)) - 2;
 };
 
 export default StyleSheet.create({
-  home: {
+  match: {
     display: 'flex',
     alignItems: 'center',
-  },
-  header: {
-    backgroundColor: '#7E549F',
-    alignSelf: 'stretch',
-    color: '#d3d2d3',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  logo: {
-    marginTop: 8,
-    marginBottom: 8,
   },
   cardProfile: {
     backgroundColor: '#C1549C',
