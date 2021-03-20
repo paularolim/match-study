@@ -1,6 +1,7 @@
 import { StyleSheet } from 'react-native';
 
 const style = StyleSheet.create({
+  none: { display: 'none' },
   body: {
     backgroundColor: '#7E549F',
     height: '100%',
@@ -12,6 +13,17 @@ const style = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 25,
     color: '#f2f2f2',
+  },
+  alertDanger: {
+    backgroundColor: '#f8d7da',
+    textAlign: 'center',
+    borderColor: '#f5c6cb',
+    borderWidth: 1,
+    borderRadius: 10,
+    padding: '2%',
+    marginTop: '2%',
+    marginBottom: '2%',
+    color: '#721c24',
   },
   label: {
     marginBottom: 2,

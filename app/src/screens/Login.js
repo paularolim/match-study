@@ -6,21 +6,47 @@ import {
   TextInput,
   TouchableHighlight,
 } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
+
+import api from '../services/api';
 
 import style from '../assets/style/LoginRegisterStyler';
 
 const Login = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
 
-  const login = () => {
-    navigation.replace('Nav');
+  const login = async () => {
+    setError('');
+    console.log('login');
+
+    if (email.length === 0 && password.length === 0) {
+      setError('Preencha email e senha!');
+      return;
+    }
+
+    try {
+      const data = { email, password };
+      const response = await api.post('/login', data);
+      console.log(response);
+
+      await AsyncStorage.setItem('@MatchStudy:token', response.data.token);
+
+      navigation.replace('Nav');
+    } catch (Exception) {
+      setError('Houve um problema ao tentar realizar o login');
+      console.log(Exception);
+    }
   };
 
   return (
     <View style={style.body}>
       <StatusBar backgroundColor="#7E549F" />
       <Text style={style.title}>Login</Text>
+
+      <Text style={error === '' ? style.none : style.alertDanger}>{error}</Text>
+
       <Text style={style.label}>Email</Text>
       <TextInput
         style={style.input}
@@ -28,7 +54,7 @@ const Login = ({ navigation }) => {
         autofocus
         type="email"
         value={email}
-        onChange={(text) => setEmail(text)}
+        onChangeText={(text) => setEmail(text)}
       />
       <Text style={style.label}>Senha</Text>
       <TextInput
@@ -37,7 +63,7 @@ const Login = ({ navigation }) => {
         secureTextEntry
         type="password"
         value={password}
-        onChange={(text) => setPassword(text)}
+        onChangeText={(text) => setPassword(text)}
       />
       <TouchableHighlight style={style.button} onPress={login}>
         <Text style={style.buttonText}>Entrar</Text>
