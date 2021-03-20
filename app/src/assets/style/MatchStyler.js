@@ -16,8 +16,7 @@ export default StyleSheet.create({
   },
   cardProfile: {
     backgroundColor: '#C1549C',
-    height: 420,
-    maxHeight: '65%',
+    height: '70%',
     width: '80%',
     borderRadius: 10,
     marginTop: '5%',

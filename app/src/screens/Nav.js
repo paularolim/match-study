@@ -26,7 +26,7 @@ const Nav = () => {
           }
 
           // You can return any component that you like here!
-          return <Icon name={iconName} size={42} color={color} />;
+          return <Icon name={iconName} size={38} color={color} />;
         },
       })}
       tabBarOptions={{
@@ -34,7 +34,7 @@ const Nav = () => {
         inactiveTintColor: '#F2F2F2',
         activeBackgroundColor: '#7E549F',
         inactiveBackgroundColor: '#7E549F',
-        style: [{ height: 70 }],
+        style: [{ height: 52 }],
         showLabel: false,
       }}
     >

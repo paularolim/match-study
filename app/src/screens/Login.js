@@ -19,7 +19,6 @@ const Login = ({ navigation }) => {
 
   const login = async () => {
     setError('');
-    console.log('login');
 
     if (email.length === 0 && password.length === 0) {
       setError('Preencha email e senha!');
@@ -29,14 +28,12 @@ const Login = ({ navigation }) => {
     try {
       const data = { email, password };
       const response = await api.post('/login', data);
-      console.log(response);
 
       await AsyncStorage.setItem('@MatchStudy:token', response.data.token);
 
       navigation.replace('Nav');
     } catch (Exception) {
       setError('Houve um problema ao tentar realizar o login');
-      console.log(Exception);
     }
   };
 
