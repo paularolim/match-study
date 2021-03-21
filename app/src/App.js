@@ -12,7 +12,12 @@ import LogoTitle from './components/LogoTitle';
 const Stack = createStackNavigator();
 
 const globalScreenOptions = {
-  headerStyle: { backgroundColor: '#7E549F', shadowOpacity: 0, elevation: 0, height: 52 },
+  headerStyle: {
+    backgroundColor: '#7E549F',
+    shadowOpacity: 0,
+    elevation: 0,
+    height: 52,
+  },
   headerTintColor: '#f2f2f2',
   headerTitleAlign: 'center',
 };
@@ -36,7 +41,7 @@ const App = () => (
       <Stack.Screen
         name="Nav"
         component={Nav}
-        options={{ headerTitle: () => <LogoTitle /> }}
+        options={{ headerTitle: () => <LogoTitle />, headerBackImage: null }}
       />
     </Stack.Navigator>
   </NavigationContainer>
