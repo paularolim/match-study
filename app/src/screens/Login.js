@@ -5,6 +5,7 @@ import {
   Text,
   TextInput,
   TouchableHighlight,
+  Image,
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 
@@ -20,7 +21,7 @@ const Login = ({ navigation }) => {
   const login = async () => {
     setError('');
 
-    if (email.length === 0 && password.length === 0) {
+    if (email.length === 0 || password.length === 0) {
       setError('Preencha email e senha!');
       return;
     }
@@ -40,43 +41,56 @@ const Login = ({ navigation }) => {
   return (
     <View style={style.body}>
       <StatusBar backgroundColor="#7E549F" />
-      <Text style={style.title}>Login</Text>
+      <View>
+        <Text style={style.title}>Login</Text>
 
-      <Text style={error === '' ? style.none : style.alertDanger}>{error}</Text>
-
-      <Text style={style.label}>Email</Text>
-      <TextInput
-        style={style.input}
-        placeholder="email@exemplo.com"
-        autofocus
-        type="email"
-        value={email}
-        onChangeText={(text) => setEmail(text)}
-      />
-      <Text style={style.label}>Senha</Text>
-      <TextInput
-        style={style.input}
-        placeholder="**************"
-        secureTextEntry
-        type="password"
-        value={password}
-        onChangeText={(text) => setPassword(text)}
-      />
-      <TouchableHighlight style={style.button} onPress={login}>
-        <Text style={style.buttonText}>Entrar</Text>
-      </TouchableHighlight>
-
-      <View style={style.actions}>
-        <Text style={style.actionText}>Esqueci minha senha</Text>
-        <Text style={style.actionText}>
-          Ainda não possui conta?{' '}
-          <Text
-            style={style.actionLink}
-            onPress={() => navigation.navigate('Register')}
-          >
-            Cadastrar
-          </Text>
+        <Text style={error === '' ? style.none : style.alertDanger}>
+          {error}
         </Text>
+
+        <Text style={style.label}>Email</Text>
+        <TextInput
+          style={style.input}
+          placeholder="email@exemplo.com"
+          placeholderTextColor="#f2f2f2"
+          autofocus
+          type="email"
+          value={email}
+          onChangeText={(text) => setEmail(text)}
+        />
+        <Text style={style.label}>Senha</Text>
+        <TextInput
+          style={style.input}
+          placeholder="**************"
+          placeholderTextColor="#f2f2f2"
+          secureTextEntry
+          type="password"
+          value={password}
+          onChangeText={(text) => setPassword(text)}
+        />
+        <TouchableHighlight style={style.button} onPress={login}>
+          <Text style={style.buttonText}>Entrar</Text>
+        </TouchableHighlight>
+
+        <View style={style.actions}>
+          <Text style={style.actionText}>Esqueci minha senha</Text>
+          <Text style={style.actionText}>
+            Ainda não possui conta?{' '}
+            <Text
+              style={style.actionLink}
+              onPress={() => navigation.navigate('Register')}
+            >
+              Cadastrar
+            </Text>
+          </Text>
+        </View>
+      </View>
+
+      <View style={style.footer}>
+        <TouchableHighlight style={style.buttonBorder}>
+          <Text style={style.buttonBorderText}>Saiba mais sobre nós!</Text>
+        </TouchableHighlight>
+        <Image source={require('../assets/img/landing_draw.png')} />
       </View>
     </View>
   );
