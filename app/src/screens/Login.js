@@ -1,41 +1,33 @@
-import React, { useState } from 'react';
-import {
-  View,
-  StatusBar,
-  Text,
-  TextInput,
-  TouchableHighlight,
-  Image,
-} from 'react-native';
-import AsyncStorage from '@react-native-community/async-storage';
+import React, { useState, useContext } from 'react';
+import { View, StatusBar, Text, TextInput, TouchableHighlight, Image } from 'react-native';
 
-import api from '../services/api';
+import authContext from '../contexts/authContext';
 
 import style from '../assets/style/LoginRegisterStyler';
 
 const Login = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
 
-  const login = async () => {
-    setError('');
+  const { signIn } = useContext(authContext);
 
-    if (email.length === 0 || password.length === 0) {
-      setError('Preencha email e senha!');
-      return;
-    }
-
-    try {
-      const data = { email, password };
-      const response = await api.post('/login', data);
-
-      await AsyncStorage.setItem('@MatchStudy:token', response.data.token);
-
-      navigation.replace('Nav');
-    } catch (Exception) {
-      setError('Houve um problema ao tentar realizar o login');
-    }
+  const handlerLogin = async () => {
+    await signIn(email, password);
+    // setError('');
+    // if (email.length === 0 || password.length === 0) {
+    //   setError('Preencha email e senha!');
+    //   return;
+    // }
+    // try {
+    //   const data = { email, password };
+    //   const response = await api.post('/login', data);
+    //   console.log(response.data);
+    //   await AsyncStorage.setItem('@MatchStudy:token', response.data.token);
+    //   navigation.replace('Nav');
+    // } catch (Exception) {
+    //   console.log(Exception);
+    //   setError('Houve um problema ao tentar realizar o login');
+    // }
   };
 
   return (
@@ -44,9 +36,7 @@ const Login = ({ navigation }) => {
       <View>
         <Text style={style.title}>Login</Text>
 
-        <Text style={error === '' ? style.none : style.alertDanger}>
-          {error}
-        </Text>
+        {/* <Text style={error === '' ? style.none : style.alertDanger}>{error}</Text> */}
 
         <Text style={style.label}>Email</Text>
         <TextInput
@@ -68,7 +58,7 @@ const Login = ({ navigation }) => {
           value={password}
           onChangeText={(text) => setPassword(text)}
         />
-        <TouchableHighlight style={style.button} onPress={login}>
+        <TouchableHighlight style={style.button} onPress={handlerLogin}>
           <Text style={style.buttonText}>Entrar</Text>
         </TouchableHighlight>
 
@@ -76,10 +66,7 @@ const Login = ({ navigation }) => {
           <Text style={style.actionText}>Esqueci minha senha</Text>
           <Text style={style.actionText}>
             Ainda não possui conta?{' '}
-            <Text
-              style={style.actionLink}
-              onPress={() => navigation.navigate('Register')}
-            >
+            <Text style={style.actionLink} onPress={() => navigation.navigate('Register')}>
               Cadastrar
             </Text>
           </Text>
