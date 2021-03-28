@@ -6,7 +6,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 const Tab = createBottomTabNavigator();
 
 import Match from './Match';
-import Chat from './Chat';
+import ChatList from './ChatList';
 import Profile from './Profile';
 
 const Nav = () => {
@@ -41,7 +41,7 @@ const Nav = () => {
       <Tab.Screen name="Match" component={Match} />
       <Tab.Screen
         name="Chat"
-        component={Chat}
+        component={ChatList}
         options={{
           tabBarBadge: 3,
           tabBarBadgeStyle: { backgroundColor: '#E84D33', marginTop: 5 },
