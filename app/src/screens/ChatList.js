@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const Chat = () => {
+const Chat = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
@@ -27,14 +27,6 @@ const Chat = () => {
           hour="17:22"
           quantity={5}
         />
-        <ChatListItem name="Malu Oliveira" message="Oi sumida!" hour="17:22" quantity={1} />
-        <ChatListItem name="Robrigo Cunha" message="Até breve" hour="15:18" quantity={4} />
-        <ChatListItem name="João Silva" message="Tchau" hour="11:50" quantity={1} />
-        <ChatListItem name="Astolfo Nascimento" message="Olá" hour="17:22" quantity={5} />
-        <ChatListItem name="Malu Oliveira" message="Oi sumida!" hour="17:22" quantity={1} />
-        <ChatListItem name="Robrigo Cunha" message="Até breve" hour="15:18" quantity={4} />
-        <ChatListItem name="João Silva" message="Tchau" hour="11:50" quantity={1} />
-        <ChatListItem name="Astolfo Nascimento" message="Olá" hour="17:22" quantity={5} />
         <ChatListItem name="Malu Oliveira" message="Oi sumida!" hour="17:22" quantity={1} />
         <ChatListItem name="Robrigo Cunha" message="Até breve" hour="15:18" quantity={4} />
         <ChatListItem name="João Silva" message="Tchau" hour="11:50" quantity={1} />

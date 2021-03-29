@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect, useContext } from 'react';
+import React, { createContext, useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-community/async-storage';
 
 import api from '../services/api';
@@ -18,6 +18,8 @@ export const AuthProvider = ({ children }) => {
         api.defaults.headers['Authorization'] = `Bearer ${storagedToken}`;
 
         setUser(JSON.parse(storagedUser));
+        setLoading(false);
+      } else {
         setLoading(false);
       }
     };

@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { List, Avatar, Badge, Divider } from 'react-native-paper';
+import { useNavigation } from '@react-navigation/native';
 
 const styles = StyleSheet.create({
   avatar: {
@@ -18,10 +19,15 @@ const styles = StyleSheet.create({
 });
 
 const ChatListItem = ({ name, message, hour, quantity }) => {
+  const navigation = useNavigation();
+
   return (
     <View>
       <List.Item
-        onPress={() => alert(`Chat com ${name}`)}
+        onPress={() => {
+          const params = { name };
+          navigation.navigate('Chat', { name });
+        }}
         title={name}
         description={message}
         left={() => (

@@ -1,12 +1,12 @@
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 const Tab = createBottomTabNavigator();
 
+import ChatRoutes from '../routes/chatRoutes';
+
 import Match from './Match';
-import ChatList from './ChatList';
 import Profile from './Profile';
 
 const Nav = () => {
@@ -19,7 +19,7 @@ const Nav = () => {
 
           if (route.name === 'Match') {
             iconName = focused ? 'home-sharp' : 'home-outline';
-          } else if (route.name === 'Chat') {
+          } else if (route.name === 'ChatRoutes') {
             iconName = focused ? 'chatbubbles' : 'chatbubbles-outline';
           } else if (route.name === 'Profile') {
             iconName = focused ? 'person' : 'person-outline';
@@ -40,8 +40,8 @@ const Nav = () => {
     >
       <Tab.Screen name="Match" component={Match} />
       <Tab.Screen
-        name="Chat"
-        component={ChatList}
+        name="ChatRoutes"
+        component={ChatRoutes}
         options={{
           tabBarBadge: 3,
           tabBarBadgeStyle: { backgroundColor: '#E84D33', marginTop: 5 },
