@@ -15,21 +15,12 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 
     public $timestamps = false;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'name', 'email', 'birth_date', 'schooling'
-    ];
+    protected $fillable = ['name', 'email', 'birth_date', 'schooling'];
+    protected $casts = ['id' => 'string'];
+    protected $hidden = ['password'];
 
-    /**
-     * The attributes excluded from the model's JSON form.
-     *
-     * @var array
-     */
-    protected $hidden = [
-        'password',
-    ];
+    public function contacts()
+    {
+        return $this->hasMany(Contact::class)->where('blocked', false);
+    }
 }

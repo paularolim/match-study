@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Firebase\JWT\JWT;
+use Ramsey\Uuid\Rfc4122\UuidV4;
 
 class UserController extends Controller
 {
@@ -19,7 +20,8 @@ class UserController extends Controller
         //
     }
 
-    public function index() {
+    public function index()
+    {
         return response()->json(['message' => 'Users']);
     }
 
@@ -36,6 +38,7 @@ class UserController extends Controller
         try {
             $user = new User;
 
+            $user->id = UuidV4::uuid4();
             $user->name = $request->input('name');
             $user->email = $request->input('email');
             $user->password = Hash::make($request->input('password'));
@@ -44,13 +47,14 @@ class UserController extends Controller
 
             $user->save();
 
-            return response()->json(['user' => $this, 'message' => 'User created successfully']);
+            return response()->json(['user' => $user, 'message' => 'User created successfully']);
         } catch (\Exception $e) {
             return response()->json(['message' => 'User registration failed']);
         }
     }
 
-    public function login(Request $request) {
+    public function login(Request $request)
+    {
         $this->validate($request, [
             'email' => 'required|email',
             'password' => 'required',
@@ -64,7 +68,15 @@ class UserController extends Controller
 
         $token = JWT::encode(['email' => $request->email], env('JWT_KEY'));
 
-        return response()->json(['token' => $token]);
+        return response()->json([
+            'token' => $token,
+            'user' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'birthDate' => $user->birth_date,
+                'schooling' => $user->schooling
+            ]
+        ]);
     }
-    //
 }
