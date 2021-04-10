@@ -25,7 +25,6 @@ const ChatListItem = ({ name, message, hour, quantity }) => {
     <View>
       <List.Item
         onPress={() => {
-          const params = { name };
           navigation.navigate('Chat', { name });
         }}
         title={name}

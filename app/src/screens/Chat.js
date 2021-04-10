@@ -1,66 +1,70 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-} from 'react-native';
-import { IconButton, Avatar, Title, TextInput } from 'react-native-paper';
+import React, { useState, useEffect, useContext } from 'react';
+import { View, TouchableOpacity, StyleSheet, LogBox } from 'react-native';
+import { IconButton, Avatar, Title } from 'react-native-paper';
 import { Bubble, Send, GiftedChat } from 'react-native-gifted-chat';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-import firebase from 'firebase';
-import firebaseConfig from '../../firebaseConfig';
+import authContext from '../contexts/authContext';
+import { firebase } from '../services/firebase';
+
+LogBox.ignoreAllLogs();
 
 const Chat = ({ navigation, route }) => {
+  const { user } = useContext(authContext);
   const { name } = route.params;
 
   const [messages, setMessages] = useState([]);
 
-  useEffect(() => {
-    setMessages([
-      {
-        _id: 1,
-        text: 'Hello developer',
-        createdAt: new Date(),
-        user: {
-          _id: 2,
-          name: 'React Native',
-          avatar: 'https://placeimg.com/140/140/any',
-        },
-        _id: 2,
-        text: 'How are you?',
-        createdAt: new Date(),
-        user: {
-          _id: 1,
-          name: 'React Native',
-          avatar: 'https://placeimg.com/140/140/any',
-        },
-        _id: 3,
-        text: 'I am fine',
-        createdAt: new Date(),
-        user: {
-          _id: 2,
-          name: 'React Native',
-          avatar: 'https://placeimg.com/140/140/any',
-        },
-      },
-    ]);
+  useEffect(async () => {
+    await firebase
+      .database()
+      .ref('messages')
+      .limitToLast(20)
+      .orderByChild('createdAt')
+      .on('value', (snapshot) => {
+        snapshot.forEach((obj) => {
+          const { _id, text, createdAt, read, user } = obj.val();
+          const message = {
+            _id,
+            text,
+            createdAt: new Date(createdAt - 3000).toISOString(),
+            read,
+            user,
+          };
+          console.log(message);
+          setMessages((prev) => GiftedChat.append(prev, message));
+        });
+      });
   }, []);
 
-  const onSend = useCallback((messages = []) => {
-    setMessages((previousMessages) => GiftedChat.append(previousMessages, messages));
-  }, []);
+  const onSend = ([messages]) => {
+    console.log(messages);
+    firebase
+      .database()
+      .ref('messages')
+      .push({
+        _id: Math.floor(Math.random() * 9999) - 1,
+        text: messages.text,
+        createdAt: new Date().getTime(),
+        user: messages.user,
+        read: false,
+      })
+      .then()
+      .catch((err) => console.error(err));
+  };
 
-  const renderBubble = (props) => (
-    <Bubble
-      {...props}
-      wrapperStyle={{ right: { backgroundColor: '#7E549F' } }}
-      textStyle={{ right: { color: '#f2f2f2' } }}
-    />
-  );
+  const renderBubble = (props) => {
+    return (
+      <Bubble
+        {...props}
+        wrapperStyle={{
+          right: { backgroundColor: '#7E549F' },
+          left: { backgroundColor: '#C1549C' },
+        }}
+        textStyle={{ right: { color: '#f2f2f2' }, left: { color: '#f2f2f2' } }}
+      />
+    );
+  };
 
   const renderSend = (props) => (
     <Send {...props}>
@@ -99,9 +103,12 @@ const Chat = ({ navigation, route }) => {
       <GiftedChat
         messages={messages}
         onSend={(messages) => onSend(messages)}
-        user={{ _id: 1 }}
+        user={{ _id: user.id, name: user.name }}
         renderBubble={renderBubble}
         renderSend={renderSend}
+        scrollToBottom
+        placeholder={'Escreva sua mensagem....'}
+        renderAvatar={null}
       />
     </View>
   );
@@ -147,6 +154,7 @@ const styles = StyleSheet.create({
   },
   iconSend: {
     marginBottom: 5,
+    marginRight: 5,
   },
 });
 
