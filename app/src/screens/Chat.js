@@ -1,78 +1,64 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, TouchableOpacity, StyleSheet, LogBox } from 'react-native';
+import {
+  View,
+  TouchableOpacity,
+  SafeAreaView,
+  TextInput,
+  StyleSheet,
+  FlatList,
+  LogBox,
+} from 'react-native';
 import { IconButton, Avatar, Title } from 'react-native-paper';
-import { Bubble, Send, GiftedChat } from 'react-native-gifted-chat';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-import authContext from '../contexts/authContext';
-import { firebase } from '../services/firebase';
+import Message from '../components/Message';
 
-LogBox.ignoreAllLogs();
+import authContext from '../contexts/authContext';
+import { db } from '../services/firebase';
 
 const Chat = ({ navigation, route }) => {
   const { user } = useContext(authContext);
   const { name } = route.params;
 
   const [messages, setMessages] = useState([]);
+  const [input, setInput] = useState('');
 
-  useEffect(async () => {
-    await firebase
-      .database()
-      .ref('messages')
-      .limitToLast(20)
-      .orderByChild('createdAt')
-      .on('value', (snapshot) => {
-        snapshot.forEach((obj) => {
-          const { _id, text, createdAt, read, user } = obj.val();
-          const message = {
-            _id,
-            text,
-            createdAt: new Date(createdAt - 3000).toISOString(),
-            read,
-            user,
-          };
-          console.log(message);
-          setMessages((prev) => GiftedChat.append(prev, message));
-        });
+  useEffect(() => {
+    LogBox.ignoreAllLogs();
+
+    db.ref('messages').on('value', (snapshot) => {
+      let messagesFromFireBase = [];
+      snapshot.forEach((snap) => {
+        const { _id, text, createdAt, read, user } = snap.val();
+        const message = {
+          _id,
+          text,
+          createdAt,
+          read,
+          user,
+        };
+        messagesFromFireBase.push(message);
       });
+      setMessages(messagesFromFireBase.reverse());
+    });
   }, []);
 
-  const onSend = ([messages]) => {
-    console.log(messages);
-    firebase
-      .database()
-      .ref('messages')
-      .push({
-        _id: Math.floor(Math.random() * 9999) - 1,
-        text: messages.text,
-        createdAt: new Date().getTime(),
-        user: messages.user,
-        read: false,
-      })
+  const onSend = () => {
+    const message = {
+      _id: Math.floor(Math.random() * 9999) - 1,
+      text: input,
+      createdAt: new Date().getTime(),
+      user: user,
+      read: false,
+    };
+
+    db.ref('messages')
+      .push(message)
       .then()
       .catch((err) => console.error(err));
-  };
 
-  const renderBubble = (props) => {
-    return (
-      <Bubble
-        {...props}
-        wrapperStyle={{
-          right: { backgroundColor: '#7E549F' },
-          left: { backgroundColor: '#C1549C' },
-        }}
-        textStyle={{ right: { color: '#f2f2f2' }, left: { color: '#f2f2f2' } }}
-      />
-    );
+    setInput('');
   };
-
-  const renderSend = (props) => (
-    <Send {...props}>
-      <View>
-        <Icon name="send" size={26} color="#7E549F" style={styles.iconSend} />
-      </View>
-    </Send>
-  );
 
   return (
     <View style={styles.container}>
@@ -100,16 +86,29 @@ const Chat = ({ navigation, route }) => {
         </TouchableOpacity>
       </View>
 
-      <GiftedChat
-        messages={messages}
-        onSend={(messages) => onSend(messages)}
-        user={{ _id: user.id, name: user.name }}
-        renderBubble={renderBubble}
-        renderSend={renderSend}
-        scrollToBottom
-        placeholder={'Escreva sua mensagem....'}
-        renderAvatar={null}
-      />
+      <SafeAreaView style={styles.chatArea}>
+        <FlatList
+          data={messages}
+          keyExtractor={(item) => item._id}
+          renderItem={({ item }) => {
+            return <Message message={item} />;
+          }}
+          inverted
+          contentContainerStyle={styles.chatWrapper}
+        />
+      </SafeAreaView>
+
+      <View style={styles.footer}>
+        <TextInput
+          style={styles.footerInput}
+          placeholder="Escreva sua mensagem..."
+          value={input}
+          onChangeText={(text) => setInput(text)}
+        />
+        <TouchableOpacity onPress={onSend}>
+          <Icon name="send" size={30} color="#7E549F" />
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -141,20 +140,26 @@ const styles = StyleSheet.create({
   chatArea: {
     flex: 1,
   },
+  chatWrapper: {
+    padding: 15,
+    display: 'flex',
+    justifyContent: 'flex-end',
+  },
   footer: {
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    paddingLeft: 20,
-    paddingBottom: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
   },
   footerInput: {
     flex: 1,
-  },
-  iconSend: {
-    marginBottom: 5,
-    marginRight: 5,
+    marginRight: 10,
+    borderRadius: 10,
+    borderWidth: 2,
+    borderColor: '#7E549F',
+    paddingHorizontal: 10,
   },
 });
 
